@@ -17,6 +17,15 @@ feedback_cli = bot.command('feedback')
 
 
 # 一般指令事件处理
+@feedback.handle()
+async def first_receive(bot: Bot, event: Event, state: T_State) -> None:
+    message = str(event.message).split('反馈')
+    contents = message[1].strip()
+
+    if contents:
+        state['contents'] = contents
+
+
 @feedback.got('contents', prompt=styledstr('admin.feedback.prompt'))
 async def handle(bot: Bot, event: Event, state: T_State) -> None:
     contents = state.get('contents')
