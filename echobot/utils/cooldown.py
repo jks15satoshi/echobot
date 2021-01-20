@@ -22,7 +22,7 @@ _LABEL = '<le><u>cooldown</u></le>'
 # 备份文件路径。
 # 默认配置文件备份于 .cache/cooldown.json 文件中，可以通过在 .env.* 文件中配置
 # CD_BACKUP 配置项进行自定义。
-_root = Path(f'{__file__}').parent.parent.parent.parent
+_root = Path(__file__).parent.parent.parent.parent
 
 try:
     _backup = config.cd_backup
