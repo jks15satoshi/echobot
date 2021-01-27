@@ -4,7 +4,9 @@
 import argparse
 
 from echobot.permission import owner
-from echobot.utils import argv_parse, confirm_intent, cooldown, styledstr
+from echobot.utils import argv_parse, confirm_intent, styledstr
+from nonebot_plugin_cooldown import cooldown
+from nonebot_plugin_cooldown.extra import time_format
 from nonebot import on_keyword
 from nonebot.adapters.cqhttp import GROUP, Bot, Event, exception
 from nonebot.log import logger
@@ -13,8 +15,8 @@ from nonebot.typing import T_State
 
 from . import bot
 
-title = on_keyword({'头衔'}, rule=to_me(), priority=1)
-title_cli = bot.command('title')
+title = on_keyword({'头衔'}, rule=to_me(), priority=1, permission=GROUP)
+title_cli = bot.command('title', permission=GROUP)
 
 
 # 一般指令事件处理
@@ -76,7 +78,8 @@ async def cli_first_receive(bot: Bot, event: Event) -> None:
 
 
 async def _should_continue(bot: Bot, event: Event) -> bool:
-    info = cooldown.get_event('admin.title', event.group_id, event.user_id)
+    info = cooldown.get_event('admin.title', group=event.group_id,
+                              user=event.user_id)
 
     is_owner = await owner(bot, event)
     is_cooled_down = not info.get('status')
@@ -86,8 +89,8 @@ async def _should_continue(bot: Bot, event: Event) -> bool:
     elif is_owner:
         msg = styledstr('admin.title.on_cooldown')
         msg_time = msg.replace('$TIME$',
-                               cooldown.time_format(info.get('remaining'),
-                                                    format='zh'))
+                               time_format(info.get('remaining'),
+                                           format='zh'))
         await bot.send(event, msg_time)
 
     return False
@@ -100,8 +103,8 @@ async def _set_title(contents: str, bot: Bot, event: Event) -> None:
         await bot.set_group_special_title(group_id=group_id, user_id=user_id,
                                           special_title=contents)
         if contents:
-            cooldown.set_event('admin.title', 86400, event.group_id,
-                               event.user_id)
+            cooldown.set_event('admin.title', 86400, group=event.group_id,
+                               user=event.user_id)
     except (exception.NetworkError, exception.ActionFailed) as err:
         logger.error(err)
         await bot.send(styledstr('admin.title.on_err'))

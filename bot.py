@@ -21,8 +21,9 @@ driver.register_adapter('cqhttp', CQHTTPBot)
 
 
 nonebot.load_plugins('echobot/plugins')
+nonebot.load_plugin('nonebot_plugin_cooldown')
 # Testing
-#nonebot.load_plugins('echobot/test')
+# nonebot.load_plugins('echobot/test')
 
 
 if __name__ == '__main__':
