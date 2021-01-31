@@ -4,16 +4,17 @@
 import argparse
 
 from echobot.permission import owner
-from echobot.utils import argv_parse, confirm_intent, styledstr
-from nonebot_plugin_cooldown import cooldown
-from nonebot_plugin_cooldown.extra import time_format
+from echobot.utils import argv_parse, confirm_intent
 from nonebot import on_keyword
 from nonebot.adapters.cqhttp import GROUP, Bot, Event, exception
 from nonebot.log import logger
 from nonebot.rule import to_me
 from nonebot.typing import T_State
+from nonebot_plugin_cooldown import cooldown
+from nonebot_plugin_cooldown.extra import time_format
 
-from . import bot
+from . import bot, str_parser
+
 
 title = on_keyword({'头衔'}, rule=to_me(), priority=1, permission=GROUP)
 title_cli = bot.command('title', permission=GROUP)
@@ -33,20 +34,20 @@ async def first_receive(bot: Bot, event: Event, state: T_State) -> None:
             state['contents'] = contents
     elif action == '移除':
         await _set_title('', bot, event)
-        await title.finish(styledstr('admin.title.remove_success'))
+        await title.finish(str_parser.parse('admin.title.remove_success'))
 
 
-@title.got('contents', styledstr('admin.title.prompt'))
+@title.got('contents', str_parser.parse('admin.title.prompt'))
 async def handle(bot: Bot, event: Event, state: T_State) -> None:
     contents = state.get('contents').strip()
 
     if not contents:
-        await title.reject(styledstr('admin.title.invalid'))
+        await title.reject(str_parser.parse('admin.title.invalid'))
     elif confirm_intent(contents) == 'decline':
-        await title.reject(styledstr('admin.title.cancel'))
+        await title.reject(str_parser.parse('admin.title.cancel'))
     else:
         await _set_title(contents, bot, event)
-        await title.finish(styledstr('admin.title.apply_success'))
+        await title.finish(str_parser.parse('admin.title.apply_success'))
 
 
 # CLI 指令事件处理
@@ -68,13 +69,14 @@ async def cli_first_receive(bot: Bot, event: Event) -> None:
         await title_cli.finish()
     elif args.subcommand == 'apply':
         if not args.contents:
-            await title_cli.finish(styledstr('admin.title.failed'))
+            await title_cli.finish(str_parser.parse('admin.title.failed'))
         else:
             await _set_title(args.contents, bot, event)
-            await title_cli.finish(styledstr('admin.title.apply_success'))
+            await title_cli.finish(str_parser.parse(
+                'admin.title.apply_success'))
     elif args.subcommand == 'remove':
         await _set_title('', bot, event)
-        await title_cli.finish(styledstr('admin.title.remove_success'))
+        await title_cli.finish(str_parser.parse('admin.title.remove_success'))
 
 
 async def _should_continue(bot: Bot, event: Event) -> bool:
@@ -87,11 +89,10 @@ async def _should_continue(bot: Bot, event: Event) -> bool:
     if is_owner and is_cooled_down:
         return True
     elif is_owner:
-        msg = styledstr('admin.title.on_cooldown')
-        msg_time = msg.replace('$TIME$',
-                               time_format(info.get('remaining'),
-                                           format='zh'))
-        await bot.send(event, msg_time)
+        msg = str_parser.parse('admin.title.on_cooldown',
+                               time=time_format(info.get('remaining'),
+                                                format='zh'))
+        await bot.send(event, msg)
 
     return False
 
@@ -107,4 +108,4 @@ async def _set_title(contents: str, bot: Bot, event: Event) -> None:
                                user=event.user_id)
     except (exception.NetworkError, exception.ActionFailed) as err:
         logger.error(err)
-        await bot.send(styledstr('admin.title.on_err'))
+        await bot.send(str_parser.parse('admin.title.on_err'))

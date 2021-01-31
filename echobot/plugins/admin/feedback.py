@@ -3,13 +3,13 @@
 '''
 import argparse
 
-from echobot.utils import argv_parse, confirm_intent, styledstr
-from nonebot import on_keyword
+from echobot.utils import argv_parse, confirm_intent
+from nonebot import on_keyword, require
 from nonebot.adapters.cqhttp import Bot, Event
 from nonebot.rule import to_me
 from nonebot.typing import T_State
 
-from . import bot
+from . import bot, str_parser
 
 
 feedback = on_keyword({'反馈'}, rule=to_me(), priority=1)
@@ -26,15 +26,15 @@ async def first_receive(bot: Bot, event: Event, state: T_State) -> None:
         state['contents'] = contents
 
 
-@feedback.got('contents', prompt=styledstr('admin.feedback.prompt'))
+@feedback.got('contents', prompt=str_parser.parse('admin.feedback.prompt'))
 async def handle(bot: Bot, event: Event, state: T_State) -> None:
     contents = state.get('contents')
     if confirm_intent(contents) == 'decline':
-        await feedback.finish(styledstr('admin.feedback.cancel'))
+        await feedback.finish(str_parser.parse('admin.feedback.cancel'))
 
     report = await _feedback_report(contents, bot, event)
     await _report_send(bot, report)
-    await feedback.finish(styledstr('admin.feedback.finish'))
+    await feedback.finish(str_parser.parse('admin.feedback.finish'))
 
 
 # CLI 指令事件处理
@@ -47,11 +47,11 @@ async def cli_first_receive(bot: Bot, event: Event) -> None:
     args = parser.parse_args(argv)
 
     if args.contents:
-        await feedback_cli.finish(styledstr('admin.feedback.failed'))
+        await feedback_cli.finish(str_parser.parse('admin.feedback.failed'))
     else:
         report = await _feedback_report(args.contents, bot, event)
         await _report_send(bot, report)
-        await feedback_cli.finish(styledstr('admin.feedback.finish'))
+        await feedback_cli.finish(str_parser.parse('admin.feedback.finish'))
 
 
 async def _feedback_report(contents: str, bot: Bot, event: Event) -> str:
