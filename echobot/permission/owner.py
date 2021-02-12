@@ -3,7 +3,7 @@ from nonebot.adapters import Bot, Event
 from nonebot.log import logger
 
 
-async def owner(bot: Bot, event: Event) -> bool:
+async def is_owner(bot: Bot, event: Event) -> bool:
     self_id = event.self_id
     group_id = event.group_id
 

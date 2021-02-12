@@ -1,5 +1,15 @@
 ---
 admin:
+  title:
+    apply_success: 申请头衔成功
+    cancel: 已取消申请
+    failed: 头衔名称不可为空，已取消申请
+    reject: 头衔名称不可为空，请重新输入
+    on_cooldown: 请在$TIME$后再申请或移除头衔
+    on_err: 发送异常，申请头衔失败
+    prompt: 请输入头衔名称
+    remove_success: 移除头衔成功
+bot:
   feedback:
     cancel: 已取消发送反馈
     failed: 反馈内容不可为空
@@ -11,12 +21,3 @@ admin:
     on_err: 发生异常，未能成功重启
     on_reboot: 正在执行重启
     prompt: 确认执行重启？
-  title:
-    apply_success: 申请头衔成功
-    cancel: 已取消申请
-    failed: 头衔名称不可为空，已取消申请
-    invalid: 头衔名称不可为空，请重新输入
-    on_cooldown: 请在$TIME$后再申请或移除头衔
-    on_err: 发送异常，申请头衔失败
-    prompt: 请输入头衔名称
-    remove_success: 移除头衔成功

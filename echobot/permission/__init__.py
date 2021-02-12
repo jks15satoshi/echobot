@@ -1,1 +1,1 @@
-from .owner import owner
+from .owner import is_owner

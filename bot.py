@@ -5,6 +5,7 @@ from nonebot.adapters.cqhttp import Bot as CQHTTPBot
 from nonebot.log import default_format, logger
 
 
+# Logging
 LOG_PATH = Path(__file__).parent / 'logs'
 if not LOG_PATH.is_dir():
     LOG_PATH.mkdir()
@@ -17,17 +18,20 @@ config = {
     'styledstr_respath': Path(__file__).parent / 'assets' / 'strings'
 }
 
+# Initialization
 nonebot.init(**config)
 app = nonebot.get_asgi()
 
 driver = nonebot.get_driver()
 driver.register_adapter('cqhttp', CQHTTPBot)
 
+# Plugins loading
 nonebot.load_plugins('echobot/plugins')
 nonebot.load_plugin('nonebot_plugin_cooldown')
 nonebot.load_plugin('nonebot_plugin_styledstr')
 # Testing
 # nonebot.load_plugins('echobot/test')
+
 
 if __name__ == '__main__':
     nonebot.run(app='bot:app')

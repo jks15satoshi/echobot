@@ -142,4 +142,10 @@ dmypy.json
 # VS Code
 .vscode/
 
+# Ignore all plugins except admin, botman and tools
+/echobot/plugins/*
+!/echobot/plugins/admin/
+!/echobot/plugins/botman/
+!/echobot/plugins/tools/
+
 # End of https://www.toptal.com/developers/gitignore/api/python
