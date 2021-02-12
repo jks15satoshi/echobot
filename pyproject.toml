@@ -8,9 +8,9 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-nonebot2 = "^2.0.0-alpha.8"
+nonebot2 = "^2.0.0-alpha.10"
 nonebot-plugin-cooldown = "^1.0.2"
-nonebot-plugin-styledstr = "^0.1.0"
+nonebot-plugin-styledstr = "^0.1.2"
 
 [tool.poetry.dev-dependencies]
 nb-cli = "^0.1.0"
