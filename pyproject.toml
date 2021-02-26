@@ -7,15 +7,17 @@ readme = "README.md"
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 nonebot2 = "^2.0.0-alpha.10"
 nonebot-plugin-cooldown = "^1.0.2"
-nonebot-plugin-styledstr = "^0.1.2"
+nonebot-plugin-styledstr = "^0.2.0"
+jieba = "^0.42.1"
 
 [tool.poetry.dev-dependencies]
 nb-cli = "^0.1.0"
 nonebot-test = "^0.1.0"
 autopep8 = "^1.5.4"
+pytest = "^6.2.2"
 
 [build-system]
 requires = ["poetry>=0.12"]
