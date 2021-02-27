@@ -34,11 +34,11 @@ zookeeper = ["kazoo"]
 
 [[package]]
 name = "arrow"
-version = "0.17.0"
+version = "1.0.0"
 description = "Better dates & times for Python"
 category = "dev"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+python-versions = ">=3.6"
 
 [package.dependencies]
 python-dateutil = ">=2.7.0"
@@ -222,7 +222,7 @@ tls = ["pyOpenSSL (>=17.5.0)", "cryptography (>=1.3.4)", "idna (>=2.0.0)"]
 
 [[package]]
 name = "docker-compose"
-version = "1.28.4"
+version = "1.28.5"
 description = "Multi-container orchestration for Docker"
 category = "dev"
 optional = false
@@ -232,7 +232,7 @@ python-versions = ">=3.4"
 cached-property = ">=1.2.0,<2"
 colorama = {version = ">=0.4,<1", markers = "sys_platform == \"win32\""}
 distro = ">=1.5.0,<2"
-docker = {version = ">=4.4.3,<5", extras = ["ssh"]}
+docker = {version = ">=4.4.4,<5", extras = ["ssh"]}
 dockerpty = ">=0.4.1,<1"
 docopt = ">=0.6.1,<1"
 jsonschema = ">=2.5.1,<4"
@@ -456,7 +456,7 @@ nonebot2 = ">=2.0.0-alpha.8,<3.0.0"
 
 [[package]]
 name = "nonebot-plugin-styledstr"
-version = "0.2.0"
+version = "0.2.1"
 description = "A Styled String Managing Plugin for Nonebot 2"
 category = "main"
 optional = false
@@ -464,6 +464,7 @@ python-versions = ">=3.9,<4.0"
 
 [package.dependencies]
 nonebot2 = ">=2.0.0-alpha.10,<3.0.0"
+pydantic = "1.7.3"
 pyyaml = ">=5.4.1,<6.0.0"
 
 [[package]]
@@ -978,7 +979,7 @@ dev = ["pytest (>=4.6.2)", "black (>=19.3b0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "0055bf44a35a4eab740170e6d6257a55318b9be865edfc7421fcb525d51c6b3d"
+content-hash = "f23756050f55fcc1ed0624515b26599982769032a75e5f25c17302061be46904"
 
 [metadata.files]
 aiofiles = [
@@ -990,8 +991,8 @@ apscheduler = [
     {file = "APScheduler-3.7.0.tar.gz", hash = "sha256:1cab7f2521e107d07127b042155b632b7a1cd5e02c34be5a28ff62f77c900c6a"},
 ]
 arrow = [
-    {file = "arrow-0.17.0-py2.py3-none-any.whl", hash = "sha256:e098abbd9af3665aea81bdd6c869e93af4feb078e98468dd351c383af187aac5"},
-    {file = "arrow-0.17.0.tar.gz", hash = "sha256:ff08d10cda1d36c68657d6ad20d74fbea493d980f8b2d45344e00d6ed2bf6ed4"},
+    {file = "arrow-1.0.0-py3-none-any.whl", hash = "sha256:3d9c973acbd30f8a87cb816c4d1ac14fbcd44289c1448e8a8eb802ecc7504fad"},
+    {file = "arrow-1.0.0.tar.gz", hash = "sha256:ca68479d4b674e35179104f53e2bf72a730847bbd301e7c0b3642dd06e669797"},
 ]
 atomicwrites = [
     {file = "atomicwrites-1.4.0-py2.py3-none-any.whl", hash = "sha256:6d1784dea7c0c8d4a5172b6c620f40b6e4cbfdf96d783691f2e1302a7b88e197"},
@@ -1104,8 +1105,8 @@ docker = [
     {file = "docker-4.4.4.tar.gz", hash = "sha256:d3393c878f575d3a9ca3b94471a3c89a6d960b35feb92f033c0de36cc9d934db"},
 ]
 docker-compose = [
-    {file = "docker-compose-1.28.4.tar.gz", hash = "sha256:681aca74e70e238ae43c810a62f471b645942f0ce97b6a0ca375fcb64f3aca85"},
-    {file = "docker_compose-1.28.4-py2.py3-none-any.whl", hash = "sha256:92375b30ab7134e8c32470b621e7cf9a3c0771ce2c20de7e1f11cd71f83a088e"},
+    {file = "docker-compose-1.28.5.tar.gz", hash = "sha256:b3ff8f0352eb4055c4c483cb498aeff7c90195fa679f3caf7098a2d6fa6030e5"},
+    {file = "docker_compose-1.28.5-py2.py3-none-any.whl", hash = "sha256:2c09c6a7d320f1191d14ae6e7d93190d459313c8393cc5c74cb15f9205a8f23f"},
 ]
 dockerpty = [
     {file = "dockerpty-0.4.1.tar.gz", hash = "sha256:69a9d69d573a0daa31bcd1c0774eeed5c15c295fe719c61aca550ed1393156ce"},
@@ -1214,8 +1215,8 @@ nonebot-plugin-cooldown = [
     {file = "nonebot_plugin_cooldown-1.0.5-py3-none-any.whl", hash = "sha256:581fe9353c5b1571475f5dd5b88daba3b9d718d8993df0d1a12a1944a8e244e3"},
 ]
 nonebot-plugin-styledstr = [
-    {file = "nonebot-plugin-styledstr-0.2.0.tar.gz", hash = "sha256:d303daf1a61ea835af39e839449b29569f836e28b70ebf8387e5e76021eeb920"},
-    {file = "nonebot_plugin_styledstr-0.2.0-py3-none-any.whl", hash = "sha256:960d630f771e18eb789a024b31eb1740c1a7c17ddc7a6dd0363292998f17d748"},
+    {file = "nonebot-plugin-styledstr-0.2.1.tar.gz", hash = "sha256:cc46ea97559eda26b2bd09d1269c6940154fc6037669a3ae785f812b261ac53e"},
+    {file = "nonebot_plugin_styledstr-0.2.1-py3-none-any.whl", hash = "sha256:93e960064faf985e90b3d71d5ca109f7f16b64443b5c23d39daed8cfaf5619d7"},
 ]
 nonebot-test = [
     {file = "nonebot-test-0.1.0.tar.gz", hash = "sha256:f83bc095927f55e55cfe61c2ccc388e2536980d6d40412879009a16484487af4"},

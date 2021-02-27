@@ -12,6 +12,7 @@ nonebot2 = "^2.0.0-alpha.10"
 nonebot-plugin-cooldown = "^1.0.2"
 nonebot-plugin-styledstr = "^0.2.0"
 jieba = "^0.42.1"
+pydantic = "1.7.3"
 
 [tool.poetry.dev-dependencies]
 nb-cli = "^0.1.0"
