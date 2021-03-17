@@ -8,14 +8,14 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-nonebot2 = "^2.0.0-alpha.10"
+nonebot2 = "^2.0.0-alpha.11"
+nonebot-adapter-cqhttp = "^2.0.0-alpha.11"
 nonebot-plugin-cooldown = "^1.0.2"
-nonebot-plugin-styledstr = "^0.2.0"
+nonebot-plugin-styledstr = "^0.2.2"
 jieba = "^0.42.1"
-pydantic = "1.7.3"
 
 [tool.poetry.dev-dependencies]
-nb-cli = "^0.1.0"
+nb-cli = "^0.4.0"
 nonebot-test = "^0.1.0"
 autopep8 = "^1.5.4"
 pytest = "^6.2.2"

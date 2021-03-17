@@ -12,7 +12,7 @@ from .glob import bot, str_parser
 reboot = bot.on_keyword('重启', permission=SUPERUSER)
 
 
-@reboot.got('confirm', prompt=str_parser.parse('bot.reboot.prompt'))
+@reboot.got('confirm', str_parser.parse('bot.reboot.prompt'))
 async def handle(bot: Bot, event: Event, state: T_State) -> None:
     confirm = state.get('confirm').lower()
 

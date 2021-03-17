@@ -18,7 +18,7 @@ async def first_receive(bot: Bot, event: Event, state: T_State) -> None:
         state['contents'] = contents
 
 
-@feedback.got('contents', prompt=str_parser.parse('bot.feedback.prompt'))
+@feedback.got('contents', str_parser.parse('bot.feedback.prompt'))
 async def handle(bot: Bot, event: Event, state: T_State) -> None:
     contents = state.get('contents')
     if confirm_intent(contents) == 'decline':

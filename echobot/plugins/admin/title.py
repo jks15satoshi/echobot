@@ -1,6 +1,10 @@
 """群头衔申请"""
+from typing import Optional
+
+import jieba.posseg as posseg
 from echobot.permission import is_owner as owner
 from echobot.utils import confirm_intent
+from echobot.utils.segment_parser import AtSegmentParser
 from nonebot import require
 from nonebot.adapters.cqhttp import GROUP, Bot, Event, exception
 from nonebot.log import logger
@@ -10,43 +14,79 @@ from .glob import admin, str_parser
 
 
 title = admin.on_keyword({'头衔'}, permission=GROUP)
-
 cd = require('nonebot_plugin_cooldown').cooldown
 
 
-# 一般指令事件处理
 @title.handle()
 async def first_receive(bot: Bot, event: Event, state: T_State) -> None:
-    message = str(event.message).split('头衔')
-    action = message[0]
-    contents = message[1].strip()
-
     if not await should_continue(bot, event):
         await title.finish()
-    elif action == '申请':
-        if contents:
-            state['contents'] = contents
-    elif action == '移除':
-        await set_title(bot, event, '')
+    else:
+        segment = AtSegmentParser(str(event.message))
+
+        # 解析 at 消息段
+        if (user_id := segment.get_data('qq')) and user_id.isdigit():
+            state['at_userid'] = int(user_id)
+
+        # 解析指令
+        message = segment.filter_segment(any_segments=True).split('头衔')
+        words = posseg.cut(message[0])
+
+        for word, flag in words:
+            if flag == 'v':
+                action = word
+
+        if action in ['申请', '设置']:
+            state['action'] = 'apply'
+            if (contents := message[1].strip()):
+                state['contents'] = contents
+        elif action in ['移除', '删除', '撤销']:
+            state['action'] = 'remove'
+            state['contents'] = ''
+
+
+async def contents_parser(bot: Bot, event: Event, state: T_State) -> None:
+    state[state['_current_key']] = str(event.raw_message)
+
+
+@title.got('contents', str_parser.parse('admin.title.prompt'),
+           args_parser=contents_parser)
+async def handle(bot: Bot, event: Event, state: T_State) -> None:
+    segment = AtSegmentParser(state.get('contents').strip())
+
+    action = state.get('action')
+    contents = segment.filter_segment(any_segments=True)
+    at_userid = (int(segment.get_data('qq')) if segment.get_data('qq')
+                 else state.get('at_userid'))
+
+    # 检查用户权限验证 at 成员有效性
+    if (at_userid and at_userid != event.user_id
+            and event.sender.role != 'admin'):
+        await title.reject(str_parser.parse('admin.title.permission_rejected'))
+    # 申请群头衔
+    elif action == 'apply':
+        if not contents:
+            await title.reject(str_parser.parse(
+                'admin.title.apply_invalid_rejected'))
+        elif confirm_intent(contents) == 'decline':
+            await title.finish(str_parser.parse('admin.title.apply_cancel'))
+        elif (length := len(bytes(contents, encoding='utf-8'))) > 18:
+            await title.reject(str_parser.parse(
+                'admin.title.apply_length_rejected', length=length))
+        else:
+            await set_title(bot, event, contents, user=at_userid)
+            await title.finish(str_parser.parse('admin.title.apply_success'))
+    # 移除群头衔
+    elif action == 'remove':
+        await set_title(bot, event, '', user=at_userid)
         await title.finish(str_parser.parse('admin.title.remove_success'))
 
 
-@title.got('contents', str_parser.parse('admin.title.prompt'))
-async def handle(bot: Bot, event: Event, state: T_State) -> None:
-    contents = state.get('contents').strip()
-
-    if not contents:
-        await title.reject(str_parser.parse('admin.title.invalid'))
-    elif confirm_intent(contents) == 'decline':
-        await title.reject(str_parser.parse('admin.title.cancel'))
-    else:
-        await set_title(bot, event, contents)
-        await title.finish(str_parser.parse('admin.title.apply_success'))
-
-
-async def set_title(bot: Bot, event: Event, contents: str) -> None:
+async def set_title(bot: Bot, event: Event, contents: str, /,
+                    user: Optional[int] = None) -> None:
     group_id = event.group_id
-    user_id = event.user_id
+    user_id = user if user else event.user_id
+
     try:
         await bot.set_group_special_title(group_id=group_id, user_id=user_id,
                                           special_title=contents)
@@ -67,9 +107,12 @@ async def should_continue(bot: Bot, event: Event) -> bool:
     if is_owner and is_cooled_down:
         return True
     elif is_owner:
-        msg = str_parser.parse('admin.title.on_cooldown',
-                               time=cd.time_format(info.get('remaining'),
-                                                   preset='zh'))
-        await bot.send(event, msg)
+        if event.sender.role == 'admin':
+            return True
+        else:
+            msg = str_parser.parse('admin.title.on_cooldown',
+                                   time=cd.time_format(info.get('remaining'),
+                                                       preset='zh'))
+            await bot.send(event, msg)
 
     return False

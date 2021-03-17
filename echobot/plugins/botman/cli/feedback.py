@@ -14,7 +14,7 @@ parser.add_argument('contents', type=str, nargs='?')
 feedback = bot.shell_command('feedback', parser=parser)
 
 
-@feedback.got('args')
+@feedback.handle()
 async def handle(bot: Bot, event: Event, state: T_State) -> None:
     if (args := state.get('args')):
         if not args.contents:

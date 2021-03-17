@@ -1,10 +1,14 @@
 ---
 admin:
   title:
+    apply_cancel: 已取消申请
+    apply_invalid_failed: 头衔名称无效，取消申请
+    apply_invalid_rejected: 头衔名称无效，请重新输入
+    apply_length_failed: 头衔名称过长，取消申请（$length$/18 bytes）
+    apply_length_rejected: 头衔名称长度超出系统限定，请重新输入（$length$/18 bytes）
+    permission_denied: 你没有群管理员权限，@成员无效
+    permission_rejected: 你没有群管理员权限，@成员无效，请重新输入
     apply_success: 申请头衔成功
-    cancel: 已取消申请
-    failed: 头衔名称不可为空，已取消申请
-    reject: 头衔名称不可为空，请重新输入
     on_cooldown: 请在$TIME$后再申请或移除头衔
     on_err: 发送异常，申请头衔失败
     prompt: 请输入头衔名称
@@ -21,3 +25,7 @@ bot:
     on_err: 发生异常，未能成功重启
     on_reboot: 正在执行重启
     prompt: 确认执行重启？
+permission:
+  owner:
+    check_err: 检查 bot 信息失败
+    check_false: 该 bot 未被设置为群主，无权执行该命令
