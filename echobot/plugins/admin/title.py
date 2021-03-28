@@ -36,31 +36,33 @@ async def first_receive(bot: Bot, event: Event, state: T_State) -> None:
             if flag == 'v':
                 action = word
 
-        if action in ['申请', '设置']:
+        if action in ('申请', '设置', '设定', '应用', '修改', '更改', '变更'):
             state['action'] = 'apply'
             if (contents := message[1].strip()):
                 state['contents'] = contents
-        elif action in ['移除', '删除', '撤销']:
+        elif action in ('移除', '删除', '撤销', '取消'):
             state['action'] = 'remove'
             state['contents'] = ''
+        else:
+            await title.reject(str_parser.parse('admin.title.action_rejected'))
 
 
-async def contents_parser(bot: Bot, event: Event, state: T_State) -> None:
+async def contents_parse(bot: Bot, event: Event, state: T_State) -> None:
     state[state['_current_key']] = str(event.raw_message)
 
 
-@title.got('contents', str_parser.parse('admin.title.prompt'),
-           args_parser=contents_parser)
+@title.got('contents', str_parser.parse('admin.title.contents_prompt'),
+           args_parser=contents_parse)
 async def handle(bot: Bot, event: Event, state: T_State) -> None:
     segment = AtSegmentParser(state.get('contents').strip())
 
     action = state.get('action')
     contents = segment.filter_segment(any_segments=True)
-    at_userid = (int(segment.get_data('qq')) if segment.get_data('qq')
-                 else state.get('at_userid'))
+    userid = (int(segment.get_data('qq')) if segment.get_data('qq')
+              else state.get('at_userid'))
 
     # 检查用户权限验证 at 成员有效性
-    if (at_userid and at_userid != event.user_id
+    if (userid and userid != event.user_id
             and event.sender.role != 'admin'):
         await title.reject(str_parser.parse('admin.title.permission_rejected'))
     # 申请群头衔
@@ -74,11 +76,11 @@ async def handle(bot: Bot, event: Event, state: T_State) -> None:
             await title.reject(str_parser.parse(
                 'admin.title.apply_length_rejected', length=length))
         else:
-            await set_title(bot, event, contents, user=at_userid)
+            await set_title(bot, event, contents, user=userid)
             await title.finish(str_parser.parse('admin.title.apply_success'))
     # 移除群头衔
     elif action == 'remove':
-        await set_title(bot, event, '', user=at_userid)
+        await set_title(bot, event, '', user=userid)
         await title.finish(str_parser.parse('admin.title.remove_success'))
 
 
